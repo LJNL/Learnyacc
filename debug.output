@@ -1,0 +1,115 @@
+Terminals unused in grammar
+
+   '-'
+   '*'
+
+
+Grammar
+
+    0 $accept: exp $end
+
+    1 exp: NUM
+    2    | ID
+    3    | exp '+' exp
+    4    | ID '=' exp
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'*' (42)
+'+' (43) 3
+'-' (45)
+'=' (61) 4
+error (256)
+NUM (258) 1
+ID (259) 2 4
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+exp (10)
+    on left: 1 2 3 4, on right: 0 3 4
+
+
+State 0
+
+    0 $accept: . exp $end
+
+    NUM  shift, and go to state 1
+    ID   shift, and go to state 2
+
+    exp  go to state 3
+
+
+State 1
+
+    1 exp: NUM .
+
+    $default  reduce using rule 1 (exp)
+
+
+State 2
+
+    2 exp: ID .
+    4    | ID . '=' exp
+
+    '='  shift, and go to state 4
+
+    $default  reduce using rule 2 (exp)
+
+
+State 3
+
+    0 $accept: exp . $end
+    3 exp: exp . '+' exp
+
+    $end  shift, and go to state 5
+    '+'   shift, and go to state 6
+
+
+State 4
+
+    4 exp: ID '=' . exp
+
+    NUM  shift, and go to state 1
+    ID   shift, and go to state 2
+
+    exp  go to state 7
+
+
+State 5
+
+    0 $accept: exp $end .
+
+    $default  accept
+
+
+State 6
+
+    3 exp: exp '+' . exp
+
+    NUM  shift, and go to state 1
+    ID   shift, and go to state 2
+
+    exp  go to state 8
+
+
+State 7
+
+    3 exp: exp . '+' exp
+    4    | ID '=' exp .
+
+    '+'  shift, and go to state 6
+
+    $default  reduce using rule 4 (exp)
+
+
+State 8
+
+    3 exp: exp . '+' exp
+    3    | exp '+' exp .
+
+    $default  reduce using rule 3 (exp)
